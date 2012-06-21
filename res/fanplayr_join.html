@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Fanplayr: Link to Wordpress</title>
+	<script>
+		var urlParams = {};
+		(function () {
+			var e,
+				a = /\+/g,  // Regex for replacing addition symbol with a space
+				r = /([^&=]+)=?([^&]*)/g,
+				//d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+				d = function (s) { return s.replace(a, " "); },
+				q = window.location.search.substring(1);
+
+			while (e = r.exec(q))
+			   urlParams[d(e[1])] = d(e[2]);
+		})();
+		
+		var queryString = 'secret=' + urlParams['secret'];
+		queryString += '&email=' + urlParams['email'];
+		queryString += '&name=' + urlParams['name'];
+		queryString += '&shopUrl=' + urlParams['shopUrl'];
+		queryString += '&shopName=' + urlParams['shopName'];
+		queryString += '&adminUrl=' + urlParams['adminUrl'];
+		
+		queryString += '&phone=' + urlParams['phone'];
+		queryString += '&address=' + urlParams['address'];
+		queryString += '&country=' + urlParams['country'];
+		queryString += '&tz=' + urlParams['tz'];
+		
+	</script>
+</head>
+<body>
+	<script>
+		document.write('<iframe style="" width="700" height="510" frameborder="0" src="http://my.fanplayr.com/join/with/wordpress/chrome/0/?' + queryString + '"></iframe>');		
+	</script>
+</body>
+</html>
