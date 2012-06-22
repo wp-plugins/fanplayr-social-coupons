@@ -47,11 +47,11 @@ Yes you can. You will not get automatic addition of collected coupon codes to yo
 
 == Screenshots ==
 
-screenshot-1.png
-screenshot-2.png
-screenshot-3.png
-screenshot-4.png
-screenshot-5.png
+1. Easy installation.
+2. Quick setup wizard.
+3. Fully featured dashboard.
+4. In-depth Analytics.
+5. Gamafied coupons equals social success.
 
 == Changelog ==
 
