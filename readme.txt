@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Easily integrate your WP-eCommerce store with Fanplayr Social Coupons to reach, influence and monetize the social consumer.
+Add Fanplayr to your WP-eCommerce store to grow your email marketing list, create social referral traffic and increase sales.
 
 == Description ==
 
