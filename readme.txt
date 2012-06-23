@@ -1,7 +1,7 @@
 === Fanplayr Social Coupons ===
 Contributors: fanplayr
 Donate link: 
-Tags: fanplayr, marketing, sales, ecommerce, wp-ecommerce, social, social marketing
+Tags: fanplayr, marketing, sales, ecommerce, wp-ecommerce, social, social marketing, coupons, offer, offers, offer site, deal, deals, social referral, social sales, monetization, convert social sales, promo codes, promotion codes
 Requires at least: 3.3
 Tested up to: 3.4
 Stable tag: trunk
