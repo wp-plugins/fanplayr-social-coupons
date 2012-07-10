@@ -55,5 +55,5 @@ screenshot-5.png
 
 == Changelog ==
 
-Version 1.0.1: Redemption tracking and security updates
 Version 1.0.0: Initial release
+Version 1.0.1: Redemption tracking and security updates
