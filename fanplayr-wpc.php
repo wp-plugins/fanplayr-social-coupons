@@ -3,12 +3,12 @@
 	* Plugin Name: Fanplayr Social Coupons
 	* Plugin URI: http://fanplayr.com/
 	* Description: A plugin that adds Fanplayr Social Coupons to your WP e-Commerce shopping cart. See also: <a href="http://fanplayr.com" target="_blank">Fanplayr.com</a> | <a href="https://getsatisfaction.com/fanplayr/" target="_blank">Support</a>
-	* Version: 1.0.0
+	* Version: 1.0.1
 	* Author: Fanplayr Inc.
 	* Author URI: http://fanplayr.com/
 	**/
   
-	define(FANPLAYR_VERSION, '1.0.0');
+	define(FANPLAYR_VERSION, '1.0.1');
 	
 	// ------------------------------------------------------------------------------------------------------------------------------------
 	// activate / deactivate	
@@ -397,5 +397,106 @@ EOT;
 			}
 			echo '</script>';
 		}catch(Exception $e){}
+	}
+	
+	// -------------------------------------------------------------------------------------------------------------------------------------
+	// Short codes
+	add_filter( 'the_content', 'fanplayr_wpc_transaction_results', 13 );
+	
+	function fanplayr_enc($str, $key)
+	{
+		for ($i = 0; $i < strlen($str); $i++)
+		{
+			$char = substr($str, $i, 1);
+			$keychar = substr($key, ($i % strlen($key))-1, 1);
+			$char = chr(ord($char)+ord($keychar));
+			$result.=$char;
+		}
+		return rawurlencode(base64_encode($result));
+	}
+	
+	function fanplayr_wpc_transaction_results($content = '')
+	{
+		global $wpdb, $post;
+	
+		$postId = $wpdb->get_var( "SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%[transactionresults]%'  AND `post_type` = 'page' LIMIT 1" );
+		
+		//if ( preg_match( "/\[fanplayr_track\]/", $content ) )
+		if ( (int)$postId == (int)$post->ID )
+		{
+			$output = '';
+			$sessionId = $_GET['sessionid'];
+			$purchaseLog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionId), ARRAY_A );
+
+			$email = wpsc_get_buyers_email($purchaseLog['id']);
+			
+			$currencyCode = $wpdb->get_results("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1",ARRAY_A);
+			$localCurrencyCode = $currencyCode[0]['code'];
+			
+			//$output .= '<pre>' . $email . '</pre>';
+			//$output .= '<pre>' . print_r($purchaseLog, true) . '</pre>';
+			//$output .= '<pre>' . print_r($localCurrencyCode, true) . '</pre>';
+			//$output .= '<pre>' . fanplayr_wpc_get_checkout_field($purchaseLog['id'], 'billingfirstname') . '</pre>';
+			//$output .= '<pre>' . fanplayr_wpc_get_checkout_field($purchaseLog['id'], 'billinglastname') . '</pre>';
+	
+			$orderNumber = ''. $purchaseLog['id'];
+			$orderEmail = ''. $email;
+			$orderDate = ''. date("Y-m-d H:i:s", $purchaseLog['date']);
+			$currency = ''. $localCurrencyCode;
+			$orderTotal = ''. number_format((float)$purchaseLog['totalprice'] + (float)$purchaseLog['discount_value'], 2);
+
+			$firstName = ''. fanplayr_wpc_get_checkout_field($purchaseLog['id'], 'billingfirstname');
+			$lastName = ''. fanplayr_wpc_get_checkout_field($purchaseLog['id'], 'billinglastname');
+			$customerEmail = ''. $email;
+			//$customerId = $order->getCustomerId();
+			$discountCode = ''. $purchaseLog['discount_data'];
+			if (!$discountCode) $discountCode = '';
+			$discountAmount = ''. number_format($purchaseLog['discount_value'], 2);
+
+			$vars = '';
+			$vars .= 'orderNumber=' . rawurlencode($orderNumber);
+			$vars .= '&orderEmail=' . rawurlencode($orderEmail);
+			$vars .= '&orderDate=' . rawurlencode($orderDate);
+			$vars .= '&currency=' . rawurlencode($currency);
+			$vars .= '&orderTotal=' . rawurlencode($orderTotal);
+			$vars .= '&firstName=' . rawurlencode($firstName);
+			$vars .= '&lastName=' . rawurlencode($lastName);
+			$vars .= '&customerEmail=' . rawurlencode($customerEmail);
+			//$vars .= '&customerId=' . rawurlencode($customerId);
+			$vars .= '&customerId=' . '';
+			$vars .= '&discountAmount=' . rawurlencode($discountAmount);
+			$vars .= '&shopType=' . rawurlencode('wordpress');
+			$vars .= '&discountCode=' . rawurlencode($discountCode);
+			//$vars .= '&accountKey=' . rawurlencode(get_option('fanplayr_config_acckey'));
+			$vars .= '&hash=' . rawurlencode(md5($orderNumber . $orderEmail . $orderDate . $orderTotal . get_option('fanplayr_config_acckey') . get_option('fanplayr_config_secret')));
+
+			$vars = 'enc=' . fanplayr_enc($vars, md5(get_option('fanplayr_config_secret'))) . '&accountKey=' . rawurlencode(get_option('fanplayr_config_acckey'));
+			
+			$text = $vars;
+			
+			$output .= '
+				<script>
+					(function(d, s) {
+						   if (!window.fp_sales_orders){
+							   var js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
+							   window.fp_sales_orders = \'' . $vars . '\'; js.async = true;
+							   js.src = \'//d1q7pknmpq2wkm.cloudfront.net/js/my.fanplayr.com/fp_sales_orders.js\'; fjs.parentNode.insertBefore(js, fjs);
+						   }
+					})(document, \'script\'); 
+				</script>
+			';
+
+			//return preg_replace( "/(<p>)*\[fanplayr_track\](<\/p>)*/", $output, $content );
+			
+			return $content . $output;
+		} else {
+			return $content;
+		}
+	}
+	
+	function fanplayr_wpc_get_checkout_field($purchaseId, $field){
+		global $wpdb;
+		$formField = $wpdb->get_results( "SELECT `id`,`type` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` IN ('" . $field . "') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1", ARRAY_A );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '" . $formField[0]['id'] . "' LIMIT 1", $purchaseId ) );
 	}
 ?>

@@ -1,14 +1,14 @@
 === Fanplayr Social Coupons ===
 Contributors: fanplayr
 Donate link: 
-Tags: fanplayr, marketing, sales, ecommerce, wp-ecommerce, social, social marketing, coupons, offer, offers, offer site, deal, deals, social referral, social sales, monetization, convert social sales, promo codes, promotion codes
+Tags: fanplayr, marketing, sales, ecommerce, wp-ecommerce, social, social marketing
 Requires at least: 3.3
 Tested up to: 3.4
-Stable tag: trunk
+Stable tag: 
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add Fanplayr to your WP-eCommerce store to grow your email marketing list, create social referral traffic and increase sales.
+Easily integrate your WP-eCommerce store with Fanplayr Social Coupons to reach, influence and monetize the social consumer.
 
 == Description ==
 
@@ -47,11 +47,11 @@ Yes you can. You will not get automatic addition of collected coupon codes to yo
 
 == Screenshots ==
 
-1. Easy installation.
-2. Quick setup wizard.
-3. Fully featured dashboard.
-4. In-depth Analytics.
-5. Gamafied coupons equals social success.
+screenshot-1.png
+screenshot-2.png
+screenshot-3.png
+screenshot-4.png
+screenshot-5.png
 
 == Changelog ==
 
