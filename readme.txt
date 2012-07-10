@@ -28,7 +28,8 @@ Enter Fanplayr a new social consumer marketing platform that is built to tackle 
 
 For detailed instructions please see:
 
-http://www.fanplayr.com/resources/using-fanplayr-with-wordpress-and-wp-ecommerce/
+[http://www.fanplayr.com/resources/using-fanplayr-with-wordpress-and-wp-ecommerce/]
+(http://www.fanplayr.com/resources/using-fanplayr-with-wordpress-and-wp-ecommerce/)
 
 == Frequently asked questions ==
 
@@ -55,5 +56,13 @@ screenshot-5.png
 
 == Changelog ==
 
-Version 1.0.0: Initial release
-Version 1.0.1: Redemption tracking and security updates
+= 1.0.1 =
+* Redemption tracking and security updates
+
+= 1.0.0 =
+* Initial Release
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+* Added redemption tracking for better analytics
